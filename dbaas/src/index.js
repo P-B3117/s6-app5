@@ -40,7 +40,7 @@ mqttClient.on("error", (err) => {
 mqttClient.on("message", async (topic, message) => {
   const fileid = uuidv4();
   const filename = `${dataStore}${fileid}.txt`;
-  const payload = { topic, message: message.toString() };
+  const payload = { topic, message: message.toString(), timestamp: new Date().toISOString() };
   try {
     await fs.writeFile(filename, JSON.stringify(payload, null, 2), "utf-8");
     console.log(`Stored message on topic "${topic}" as ${fileid}`);
@@ -54,7 +54,7 @@ app.get("/", async (req, res) => {
   const txtFiles = files.filter(f => f.endsWith(".txt"));
   const result = await Promise.all(txtFiles.map(async (f) => {
     const data = JSON.parse(await fs.readFile(`${dataStore}${f}`, "utf-8"));
-    return { id: f.replace(".txt", ""), topic: data.topic, message: data.message };
+    return { id: f.replace(".txt", ""), topic: data.topic, message: data.message, timestamp: data.timestamp };
   }));
   res.json(result);
 });
@@ -71,7 +71,7 @@ app.post("/", async (req, res) => {
   let fileid = uuidv4();
   const filename = `${dataStore}${fileid}.txt`;
 
-  await fs.writeFile(filename, JSON.stringify(req.body, null, 2), "utf-8");
+  await fs.writeFile(filename, JSON.stringify({ ...req.body, timestamp: new Date().toISOString() }, null, 2), "utf-8");
 
   res.json({ message: fileid });
 });

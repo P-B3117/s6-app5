@@ -24,6 +24,25 @@ h1 {
   margin-bottom: 2rem;
 }
 
+.delete-all {
+  width: 100%;
+  max-width: 480px;
+  background: #1a1a1a;
+  border: 1px solid #222;
+  border-radius: 8px;
+  padding: 0.7rem 1.2rem;
+  color: #888;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: border-color 0.2s, color 0.2s;
+  margin-bottom: 1rem;
+}
+
+.delete-all:hover {
+  border-color: #c44;
+  color: #c44;
+}
+
 #messages {
   width: 100%;
   max-width: 480px;
@@ -117,6 +136,12 @@ h1 {
 .msg .body {
   font-size: 0.95rem;
   color: #ccc;
+}
+
+.timestamp {
+  font-size: 0.7rem;
+  color: #555;
+  margin-top: 0.4rem;
 }
 
 .empty {

@@ -13,6 +13,7 @@
     <input type="text" id="message" placeholder="Message" required>
     <button type="submit">Post</button>
   </form>
+  <button class="delete-all" onclick="removeAll()">Delete all</button>
   <div id="messages"></div>
 
   <script>
@@ -51,6 +52,18 @@
       }
     }
 
+    async function removeAll() {
+      if (!confirm("Delete all messages?")) return;
+      try {
+        const res = await fetch("http://localhost:3000/");
+        const data = await res.json();
+        await Promise.all(data.map(m => fetch(`http://localhost:3000/${m.id}`, { method: "DELETE" })));
+        load();
+      } catch (err) {
+        console.error("Failed to delete all:", err.message);
+      }
+    }
+
     async function load() {
       try {
         const res = await fetch("http://localhost:3000/");
@@ -62,11 +75,14 @@
           return;
         }
 
+        data.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+
         el.innerHTML = data.map(m => `
           <div class="msg">
             <button class="delete" onclick="remove('${m.id}')">&times;</button>
             <div class="topic">${m.topic}</div>
             <div class="body">${m.message}</div>
+            <div class="timestamp">${new Date(m.timestamp).toLocaleString()}</div>
           </div>
         `).join("");
       } catch (err) {
