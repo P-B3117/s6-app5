@@ -1,0 +1,9 @@
+services:
+  dbaas: 
+    container_name: dbaas
+    build: .
+    ports:
+      - "3003:3003"
+    environment:
+      - PORT=3003
+    restart: unless-stopped

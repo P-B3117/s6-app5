@@ -35,10 +35,19 @@ services:
       - mosquitto
     restart: unless-stopped
 
+  control:
+    build: ./control
+    ports:
+      - "3003:3003"
+    environment:
+      - PORT=3003
+    restart: unless-stopped
+
   frontend:
     build: ./frontend
     ports:
       - "3002:80"
     depends_on:
       - dbaas
+      - control
     restart: unless-stopped
