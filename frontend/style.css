@@ -1,0 +1,134 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: system-ui, -apple-system, sans-serif;
+  background: #0f0f0f;
+  color: #e0e0e0;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 3rem 1rem;
+}
+
+h1 {
+  font-size: 1.2rem;
+  font-weight: 500;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: #666;
+  margin-bottom: 2rem;
+}
+
+#messages {
+  width: 100%;
+  max-width: 480px;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.form {
+  width: 100%;
+  max-width: 480px;
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 2rem;
+}
+
+.form input {
+  flex: 1;
+  background: #1a1a1a;
+  border: 1px solid #222;
+  border-radius: 8px;
+  padding: 0.7rem 1rem;
+  color: #e0e0e0;
+  font-size: 0.85rem;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.form input:focus {
+  border-color: #444;
+}
+
+.form input::placeholder {
+  color: #555;
+}
+
+.form button {
+  background: #1a1a1a;
+  border: 1px solid #222;
+  border-radius: 8px;
+  padding: 0.7rem 1.2rem;
+  color: #888;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: border-color 0.2s, color 0.2s;
+}
+
+.form button:hover {
+  border-color: #444;
+  color: #ccc;
+}
+
+.msg {
+  position: relative;
+  background: #1a1a1a;
+  border: 1px solid #222;
+  border-radius: 8px;
+  padding: 1rem;
+  transition: border-color 0.2s;
+}
+
+.msg:hover {
+  border-color: #444;
+}
+
+.delete {
+  position: absolute;
+  top: 0.6rem;
+  right: 0.7rem;
+  background: none;
+  border: none;
+  color: #444;
+  font-size: 3rem;
+  cursor: pointer;
+  transition: color 0.2s;
+  line-height: 1;
+}
+
+.delete:hover {
+  color: #c44;
+}
+
+.msg .topic {
+  font-size: 0.7rem;
+  color: #888;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 0.4rem;
+}
+
+.msg .body {
+  font-size: 0.95rem;
+  color: #ccc;
+}
+
+.empty {
+  color: #444;
+  text-align: center;
+  font-size: 0.85rem;
+  margin-top: 4rem;
+}
+
+.error {
+  color: #c44;
+  text-align: center;
+  font-size: 0.85rem;
+  margin-top: 4rem;
+}

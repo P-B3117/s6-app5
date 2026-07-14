@@ -34,3 +34,9 @@ services:
     depends_on:
       - mosquitto
     restart: unless-stopped
+
+  frontend:
+    build: ./frontend
+    ports:
+      - "3002:80"
+    restart: unless-stopped

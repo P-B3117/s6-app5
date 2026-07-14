@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DBaaS</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <h1>DBaaS</h1>
+  <form class="form" id="post-form">
+    <input type="text" id="topic" placeholder="Topic" required>
+    <input type="text" id="message" placeholder="Message" required>
+    <button type="submit">Post</button>
+  </form>
+  <div id="messages"></div>
+
+  <script>
+    const el = document.getElementById("messages");
+    const form = document.getElementById("post-form");
+    const topicInput = document.getElementById("topic");
+    const messageInput = document.getElementById("message");
+
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const topic = topicInput.value.trim();
+      const message = messageInput.value.trim();
+      if (!topic || !message) return;
+
+      try {
+        await fetch("http://localhost:3000/", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ topic, message }),
+        });
+        topicInput.value = "";
+        messageInput.value = "";
+        load();
+      } catch (err) {
+        console.error("Failed to post:", err.message);
+      }
+    });
+
+    async function remove(id) {
+      if (!confirm("Delete this message?")) return;
+      try {
+        await fetch(`http://localhost:3000/${id}`, { method: "DELETE" });
+        load();
+      } catch (err) {
+        console.error("Failed to delete:", err.message);
+      }
+    }
+
+    async function load() {
+      try {
+        const res = await fetch("http://localhost:3000/");
+        if (!res.ok) throw new Error(res.statusText);
+        const data = await res.json();
+
+        if (data.length === 0) {
+          el.innerHTML = '<div class="empty">No messages yet</div>';
+          return;
+        }
+
+        el.innerHTML = data.map(m => `
+          <div class="msg">
+            <button class="delete" onclick="remove('${m.id}')">&times;</button>
+            <div class="topic">${m.topic}</div>
+            <div class="body">${m.message}</div>
+          </div>
+        `).join("");
+      } catch (err) {
+        el.innerHTML = `<div class="error">Could not reach dbaas: ${err.message}</div>`;
+      }
+    }
+
+    load();
+    setInterval(load, 3000);
+  </script>
+</body>
+</html>
