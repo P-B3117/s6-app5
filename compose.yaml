@@ -1,0 +1,36 @@
+services:
+  mosquitto:
+    image: eclipse-mosquitto
+    volumes:
+      - ./mosquitto/config:/mosquitto/config
+      - ./mosquitto/data:/mosquitto/data
+      - ./mosquitto/log:/mosquitto/log
+    ports:
+      - 1883:1883
+      - 9001:9001
+    stdin_open: true
+    tty: true
+
+  dbaas:
+    build: ./dbaas
+    ports:
+      - "3000:3000"
+    environment:
+      - PORT=3000
+      - MQTT_URL=mqtt://mosquitto:1883
+    volumes:
+      - ./dbaas/data:/app/data
+    depends_on:
+      - mosquitto
+    restart: unless-stopped
+
+  relais:
+    build: ./relais
+    ports:
+      - "3001:3001"
+    environment:
+      - PORT=3001
+      - MQTT_URL=mqtt://mosquitto:1883
+    depends_on:
+      - mosquitto
+    restart: unless-stopped

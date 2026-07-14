@@ -1,14 +1,45 @@
+const mqtt = require("mqtt");
 const express = require("express");
 const fs = require("fs").promises;
 const { v4: uuidv4 } = require("uuid");
 
 const app = express();
 const PORT = process.env.PORT || 3000;
+const MQTT_URL = process.env.MQTT_URL || "mqtt://localhost:1883";
 
 const dataStore = "/app/data/";
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+const mqttClient = mqtt.connect(MQTT_URL, { reconnectPeriod: 5000 });
+
+mqttClient.on("connect", () => {
+  console.log(`Connected to MQTT broker at ${MQTT_URL}`);
+  mqttClient.subscribe("#", (err) => {
+    if (err) {
+      console.error("Failed to subscribe to all topics:", err.message);
+    } else {
+      console.log("Subscribed to all topics (#)");
+    }
+  });
+});
+
+mqttClient.on("error", (err) => {
+  console.error("MQTT connection error:", err.message);
+});
+
+mqttClient.on("message", async (topic, message) => {
+  const fileid = uuidv4();
+  const filename = `${dataStore}${fileid}.txt`;
+  const payload = { topic, message: message.toString() };
+  try {
+    await fs.writeFile(filename, JSON.stringify(payload, null, 2), "utf-8");
+    console.log(`Stored message on topic "${topic}" as ${fileid}`);
+  } catch (err) {
+    console.error("Failed to store message:", err.message);
+  }
+});
 
 app.get("/", async (req, res) => {
   const files = await fs.readdir(dataStore);
@@ -21,9 +52,6 @@ app.get("/", async (req, res) => {
 });
 
 app.post("/", async (req, res) => {
-  let fileid = uuidv4();
-  const filename = `${dataStore}${fileid}.txt`;
-
   if (!req.body) {
     return res.status(400).json({ error: "Request body is required" });
   }
@@ -31,6 +59,9 @@ app.post("/", async (req, res) => {
   if (!req.body.topic || !req.body.message) {
     return res.status(400).json({ error: "Both 'topic' and 'message' fields are required" });
   }
+
+  let fileid = uuidv4();
+  const filename = `${dataStore}${fileid}.txt`;
 
   await fs.writeFile(filename, JSON.stringify(req.body, null, 2), "utf-8");
 

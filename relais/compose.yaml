@@ -1,12 +1,10 @@
 services:
-  dbaas: 
-    container_name: dbaas
+  relais: 
+    container_name: relais
     build: .
     ports:
-      - "3000:3000"
+      - "3001:3001"
     environment:
-      - PORT=3000
+      - PORT=3001
       - MQTT_URL=mqtt://mosquitto:1883
-    volumes:
-      - ./data:/app/data
     restart: unless-stopped
