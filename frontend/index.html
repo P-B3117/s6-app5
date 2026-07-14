@@ -29,7 +29,7 @@
       if (!topic || !message) return;
 
       try {
-        await fetch("http://localhost:3000/", {
+        await fetch("/api/", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ topic, message }),
@@ -45,7 +45,7 @@
     async function remove(id) {
       if (!confirm("Delete this message?")) return;
       try {
-        await fetch(`http://localhost:3000/${id}`, { method: "DELETE" });
+        await fetch(`/api/${id}`, { method: "DELETE" });
         load();
       } catch (err) {
         console.error("Failed to delete:", err.message);
@@ -55,9 +55,9 @@
     async function removeAll() {
       if (!confirm("Delete all messages?")) return;
       try {
-        const res = await fetch("http://localhost:3000/");
+        const res = await fetch("/api/");
         const data = await res.json();
-        await Promise.all(data.map(m => fetch(`http://localhost:3000/${m.id}`, { method: "DELETE" })));
+        await Promise.all(data.map(m => fetch(`/api/${m.id}`, { method: "DELETE" })));
         load();
       } catch (err) {
         console.error("Failed to delete all:", err.message);
@@ -66,7 +66,7 @@
 
     async function load() {
       try {
-        const res = await fetch("http://localhost:3000/");
+        const res = await fetch("/api/");
         if (!res.ok) throw new Error(res.statusText);
         const data = await res.json();
 

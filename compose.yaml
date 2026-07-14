@@ -39,4 +39,6 @@ services:
     build: ./frontend
     ports:
       - "3002:80"
+    depends_on:
+      - dbaas
     restart: unless-stopped
