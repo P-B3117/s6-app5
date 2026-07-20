@@ -1,0 +1,3 @@
+# Inside src/idf_component.yml
+dependencies:
+  espressif/coap: "^4.3.5"

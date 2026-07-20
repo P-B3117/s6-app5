@@ -18,7 +18,7 @@ app.post("/", async (req, res) => {
 
   const coapReq = coap.request({
     hostname: req.body.ip,
-    pathname: "/command",
+    pathname: `/${req.body.command.toLowerCase()}`,
     method: "POST",
   });
 

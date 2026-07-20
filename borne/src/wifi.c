@@ -5,8 +5,8 @@
 #include "esp_event.h"
 #include "esp_log.h"
 
-#define WIFI_SSID      "cest_lui"
-#define WIFI_PASS      "#Bubulle3117"
+#define WIFI_SSID      "Lui-poche"
+#define WIFI_PASS      "Fingerlakes"
 #define WIFI_MAXIMUM_RETRY  5
 
 static const char *TAG = "wifi_station";
