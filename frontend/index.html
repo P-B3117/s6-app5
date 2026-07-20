@@ -114,8 +114,8 @@
       try {
         const res = await fetch("/api/");
         const data = await res.json();
-        await Promise.all(data.map(m => fetch(`/api/${m.id}`, { method: "DELETE" })));
-        load();
+        await Promise.all(data.map(m => fetch(`/api/${m.id}`, { method: "DELETE" }))).then(() =>
+          load());
       } catch (err) {
         console.error("Failed to delete all:", err.message);
       }
